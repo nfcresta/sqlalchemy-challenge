@@ -25,7 +25,11 @@ Stations = Base.classes.station
 app = Flask(__name__)
 
 
+####################################################
 # Routes
+####################################################
+
+# Homepage route
 @app.route("/")
 def home():
     return (f"Welcome to my SQLAlchemy HW API!<br/>"
@@ -37,6 +41,8 @@ def home():
             f"/api/v1.0/start<br/>"
             f"/api/v1.0/start/end")
 
+
+# Precipitation route
 @app.route("/api/v1.0/precipitation")
 def precipitation():
     session = Session(engine)
@@ -57,6 +63,7 @@ def precipitation():
     return jsonify(precipitation_data)
 
 
+# Stations route
 @app.route("/api/v1.0/stations")
 def stations():
     session = Session(engine)
@@ -72,6 +79,7 @@ def stations():
     return jsonify(stations_list)
 
 
+# Temperatures route
 @app.route("/api/v1.0/tobs")
 def tobs():
     session = Session(engine)
@@ -88,6 +96,7 @@ def tobs():
     return jsonify(temps_list)
 
 
+# Start route
 @app.route("/api/v1.0/<start>")
 def start_date(start):
     session = Session(engine)
@@ -111,6 +120,7 @@ def start_date(start):
     return jsonify(start_date)
 
 
+# Start End route
 @app.route("/api/v1.0/<start>/<end>")
 def start_end_date(start, end):
     session = Session(engine)
