@@ -48,7 +48,7 @@ def precipitation():
     session = Session(engine)
 
     # query results
-    results = session.query(Measurements.date, Measurements.prcp).all()
+    results = session.query(Measurements.date, Measurements.prcp).filter(Measurements.date >= '2016-08-23').all()
 
     session.close()
 
@@ -56,8 +56,8 @@ def precipitation():
     precipitation_data = []
     for date, precip in results:
         precipitation_dict = {}
-        precipitation_dict["date"] = date
-        precipitation_dict["precipitation"] = precip
+        precipitation_dict["Date"] = date
+        precipitation_dict["Precipitation (Inches)"] = precip
         precipitation_data.append(precipitation_dict)
 
     return jsonify(precipitation_data)
@@ -69,12 +69,17 @@ def stations():
     session = Session(engine)
 
     # query results
-    results = session.query(Stations.station).all()
+    results = session.query(Stations.station, Stations.name).all()
 
     session.close()
 
     # return json list of stations from the dataset
-    stations_list = list(results)
+    stations_list = []
+    for station_id, location in results:
+        stations_dict = {}
+        stations_dict["Station ID"] = station_id
+        stations_dict["Location"] = location
+        stations_list.append(stations_dict)
 
     return jsonify(stations_list)
 
@@ -91,7 +96,13 @@ def tobs():
     session.close()
 
     # return JSON list of temperatures from last year
-    temps_list = list(results)
+    temps_list = []
+    for station_id, date, temp in results:
+        temps_dict = {}
+        temps_dict["Station ID"] = station_id
+        temps_dict["Date"] = date
+        temps_dict["Temperature (F)"] = temp
+        temps_list.append(temps_dict)
 
     return jsonify(temps_list)
 
@@ -111,10 +122,10 @@ def start_date(start):
     start_date = []
     for date, tmin, tavg, tmax in results:
         start_dates = {}
-        start_dates["date"] = date
-        start_dates["tmin"] = tmin
-        start_dates["tavg"] = tavg
-        start_dates["tmax"] = tmax
+        start_dates["Date"] = date
+        start_dates["Tmin"] = tmin
+        start_dates["Tavg"] = tavg
+        start_dates["Tmax"] = tmax
         start_date.append(start_dates)
 
     return jsonify(start_date)
@@ -135,10 +146,10 @@ def start_end_date(start, end):
     start_end_date = []
     for date, tmin, tavg, tmax in results:
         start_end_dates = {}
-        start_end_dates["date"] = date
-        start_end_dates["tmin"] = tmin
-        start_end_dates["tavg"] = tavg
-        start_end_dates["tmax"] = tmax
+        start_end_dates["Date"] = date
+        start_end_dates["Tmin"] = tmin
+        start_end_dates["Tavg"] = tavg
+        start_end_dates["Tmax"] = tmax
         start_end_date.append(start_end_dates)
 
     return jsonify(start_end_date)
